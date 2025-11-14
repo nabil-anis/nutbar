@@ -115,7 +115,7 @@ const App: React.FC = () => {
 
     const generationRequest = () => ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: [{ parts: [{ text: prompt }] }],
+      contents: prompt,
       config: {
         responseMimeType: "application/json",
         responseSchema: {
@@ -177,24 +177,33 @@ const App: React.FC = () => {
         : `The business is described as: "${businessContext}".`;
     
     const prompt = `You are an expert SEO copywriter writing for a business. ${businessInfo}
-Your task is to write a comprehensive, SEO-optimized blog post for the product "${productName}" about the topic: "${topic}".
+Your task is to write a comprehensive, SEO-optimized, and highly readable blog post for the product "${productName}" about the topic: "${topic}".
 
 The key angle of the article is to explain how your business (the one described above) helps the reader with this product. Weave mentions of the business's value proposition and how it helps the customer naturally into the article. Do not sound overly promotional.
 
-Structure the content logically for maximum readability and engagement:
-- An H1 title (the topic itself).
-- Multiple H2 and H3 subheadings to break up the text.
-- Short, easy-to-read paragraphs. Each paragraph should ideally be no more than 3-4 sentences.
-- Break down complex ideas using bullet points or numbered lists where appropriate.
-- Keep sentences concise and direct. Avoid long, complex sentence structures.
-- Use ample white space between paragraphs and headings in the Markdown output to make the content easy to scan.
-- A strong concluding summary with a call-to-action. The call-to-action MUST be specific and highly relevant to the business described. For example, if the business is a coffee roaster selling beans, a good CTA is "Explore our ethically sourced single-origin roasts today." If it's a SaaS for project management, a good CTA is "Start your free 14-day trial and streamline your team's workflow."
+**Readability is paramount. Follow these rules strictly:**
+- **Structure:**
+  - Start with an H1 title (the topic itself).
+  - Immediately after the introduction, include a "Key Takeaways" section using a blockquote with 3-4 bullet points summarizing the article's main points.
+  - Use a logical hierarchy of H2 and H3 subheadings to break up the text.
+  - End with a strong concluding summary, followed by a relevant call-to-action.
+  - After the conclusion, add a "Frequently Asked Questions" (FAQ) section with 2-3 relevant questions and answers.
+- **Clarity and Conciseness:**
+  - Write in a clear, conversational tone.
+  - **Paragraphs must be short:** Limit each paragraph to a maximum of 3-4 sentences.
+  - **Sentences must be concise:** Break down long, complex sentences into shorter, simpler ones. Aim for an average sentence length of 15-20 words.
+  - Use **bold text** to highlight key terms and important concepts to improve scannability.
+- **Engagement:**
+  - Break down complex ideas using bullet points or numbered lists where appropriate.
+  - Use ample white space between paragraphs and headings in the Markdown output.
 
 The article should be engaging, informative, and at least 800 words. Format the entire output in Markdown.
 
+The call-to-action MUST be specific and highly relevant to the business described. For example, if the business is a coffee roaster selling beans, a good CTA is "Explore our ethically sourced single-origin roasts today." If it's a SaaS for project management, a good CTA is "Start your free 14-day trial and streamline your team's workflow."
+
 ---
 
-After the main article, add the following sections, each with a clear heading:
+After the main article (including the FAQ), add the following final sections, each with a clear heading:
 
 ### Meta Description
 A concise and compelling summary (155-160 characters) for search engine results.
@@ -204,7 +213,7 @@ A comma-separated list of 5-7 relevant keywords for this blog post.`;
 
     const generationRequest = () => ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: [{ parts: [{ text: prompt }] }]
+        contents: prompt
     });
 
     try {
