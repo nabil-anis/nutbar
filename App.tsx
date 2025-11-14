@@ -5,11 +5,9 @@ import { marked } from 'marked';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import LoadingSpinner from './components/LoadingSpinner';
-import Hero from './components/Hero';
+import { Topics } from './types';
 
-type Topics = {
-  [key: string]: string[];
-};
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const StepCard: React.FC<{ children: React.ReactNode, className?: string, noPadding?: boolean}> = ({ children, className, noPadding }) => (
   <div className={`bg-white dark:bg-zinc-800/50 border border-slate-200/80 dark:border-zinc-700/50 rounded-2xl shadow-lg shadow-slate-300/50 dark:shadow-black/20 ${noPadding ? '' : 'p-6 sm:p-8'} ${className}`}>
@@ -18,7 +16,7 @@ const StepCard: React.FC<{ children: React.ReactNode, className?: string, noPadd
 );
 
 const App: React.FC = () => {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
   const [businessContext, setBusinessContext] = useState('');
   const [contextType, setContextType] = useState<'description' | 'url'>('description');
 
@@ -32,8 +30,6 @@ const App: React.FC = () => {
   const [isGeneratingTopics, setIsGeneratingTopics] = useState(false);
   const [isGeneratingBlog, setIsGeneratingBlog] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
   const handleContextSubmit = () => {
     if (!businessContext.trim()) {
@@ -159,84 +155,93 @@ A comma-separated list of 5-7 relevant keywords for this blog post.`;
   };
   
   const renderStep1 = () => (
-    <StepCard>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">First, tell us about your business</h1>
-        <p className="text-slate-500 dark:text-zinc-400 mt-2">
-          This context will be used to personalize the generated blog posts.
-        </p>
-      </div>
-      
-      <div className="space-y-6">
-        <fieldset>
-            <legend className="sr-only">Input Type</legend>
-            <div className="p-1 bg-slate-200/70 dark:bg-zinc-900 rounded-lg flex items-center justify-between gap-1">
-              {(['description', 'url'] as const).map((type) => (
-                <div key={type} className="w-full">
-                  <input
-                    type="radio"
-                    id={`type-${type}`}
-                    name="contextType"
-                    value={type}
-                    checked={contextType === type}
-                    onChange={() => {
-                      setContextType(type);
-                      setBusinessContext('');
-                    }}
-                    className="sr-only peer"
-                  />
-                  <label
-                    htmlFor={`type-${type}`}
-                    className="block w-full text-center cursor-pointer select-none rounded-md px-2 py-1.5 text-sm font-semibold transition-colors
-                                text-slate-600 dark:text-zinc-300 peer-checked:bg-white dark:peer-checked:bg-zinc-700/50 peer-checked:text-slate-800 dark:peer-checked:text-zinc-50 peer-checked:shadow-sm
-                                hover:bg-white/70 dark:hover:bg-zinc-700/30"
-                  >
-                    {type === 'description' ? 'Business Description' : 'Website URL'}
-                  </label>
-                </div>
-              ))}
+    <div className="text-center animate-fade-in">
+      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        Your AI Content Studio
+      </h1>
+      <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-zinc-400 max-w-3xl mx-auto leading-relaxed">
+        Go from a single product name to a ready-to-publish, SEO-optimized blog post in minutes. Start below by telling us about your business.
+      </p>
+
+      <StepCard className="mt-10 sm:mt-12 text-left max-w-2xl mx-auto">
+        <div className="mb-6">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">1. Provide Business Context</h2>
+          <p className="text-slate-500 dark:text-zinc-400 mt-1">
+            This helps tailor the content to your brand.
+          </p>
+        </div>
+        
+        <div className="space-y-6">
+          <fieldset>
+              <legend className="sr-only">Input Type</legend>
+              <div className="p-1 bg-slate-200/70 dark:bg-zinc-900 rounded-lg flex items-center justify-between gap-1">
+                {(['description', 'url'] as const).map((type) => (
+                  <div key={type} className="w-full">
+                    <input
+                      type="radio"
+                      id={`type-${type}`}
+                      name="contextType"
+                      value={type}
+                      checked={contextType === type}
+                      onChange={() => {
+                        setContextType(type);
+                        setBusinessContext('');
+                      }}
+                      className="sr-only peer"
+                    />
+                    <label
+                      htmlFor={`type-${type}`}
+                      className="block w-full text-center cursor-pointer select-none rounded-md px-2 py-1.5 text-sm font-semibold transition-colors
+                                  text-slate-600 dark:text-zinc-300 peer-checked:bg-white dark:peer-checked:bg-zinc-700/50 peer-checked:text-slate-800 dark:peer-checked:text-zinc-50 peer-checked:shadow-sm
+                                  hover:bg-white/70 dark:hover:bg-zinc-700/30"
+                    >
+                      {type === 'description' ? 'Business Description' : 'Website URL'}
+                    </label>
+                  </div>
+                ))}
+              </div>
+          </fieldset>
+
+          {contextType === 'description' ? (
+            <div>
+              <label htmlFor="businessContext" className="sr-only">Business Description</label>
+              <textarea
+                id="businessContext"
+                value={businessContext}
+                onChange={(e) => setBusinessContext(e.target.value)}
+                placeholder="e.g., 'We are a specialty coffee roaster from Austin, TX...'"
+                className="w-full h-32 bg-slate-100 dark:bg-zinc-700/40 border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-zinc-100 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 transition placeholder:text-slate-400 dark:placeholder:text-zinc-500"
+                aria-label="Business Description"
+              />
             </div>
-        </fieldset>
+          ) : (
+            <div>
+              <label htmlFor="businessUrl" className="sr-only">Website URL</label>
+              <input
+                id="businessUrl"
+                type="url"
+                value={businessContext}
+                onChange={(e) => setBusinessContext(e.target.value)}
+                placeholder="e.g., 'https://yourbusiness.com'"
+                className="w-full bg-slate-100 dark:bg-zinc-700/40 border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-zinc-100 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 transition placeholder:text-slate-400 dark:placeholder:text-zinc-500"
+                aria-label="Website URL"
+              />
+            </div>
+          )}
+        </div>
 
-        {contextType === 'description' ? (
-          <div>
-            <label htmlFor="businessContext" className="sr-only">Business Description</label>
-            <textarea
-              id="businessContext"
-              value={businessContext}
-              onChange={(e) => setBusinessContext(e.target.value)}
-              placeholder="e.g., 'We are a specialty coffee roaster from Austin, TX...'"
-              className="w-full h-32 bg-slate-100 dark:bg-zinc-700/40 border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-zinc-100 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 transition placeholder:text-slate-400 dark:placeholder:text-zinc-500"
-              aria-label="Business Description"
-            />
-          </div>
-        ) : (
-          <div>
-            <label htmlFor="businessUrl" className="sr-only">Website URL</label>
-            <input
-              id="businessUrl"
-              type="url"
-              value={businessContext}
-              onChange={(e) => setBusinessContext(e.target.value)}
-              placeholder="e.g., 'https://yourbusiness.com'"
-              className="w-full bg-slate-100 dark:bg-zinc-700/40 border-slate-300 dark:border-zinc-700 text-slate-900 dark:text-zinc-100 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:outline-none focus:border-blue-500 dark:focus:border-blue-500 transition placeholder:text-slate-400 dark:placeholder:text-zinc-500"
-              aria-label="Website URL"
-            />
-          </div>
-        )}
-      </div>
-
-      <div className="mt-8 border-t border-slate-200 dark:border-zinc-700/50 pt-6">
-         <button
-          onClick={handleContextSubmit}
-          className="bg-blue-600 w-full text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-px"
-          disabled={!businessContext.trim()}
-        >
-          Continue
-        </button>
-      </div>
-      {error && <p className="text-red-500 mt-4 text-center text-sm" role="alert">{error}</p>}
-    </StepCard>
+        <div className="mt-8 border-t border-slate-200 dark:border-zinc-700/50 pt-6">
+           <button
+            onClick={handleContextSubmit}
+            className="bg-blue-600 w-full text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-px"
+            disabled={!businessContext.trim()}
+          >
+            Continue
+          </button>
+        </div>
+        {error && <p className="text-red-500 mt-4 text-center text-sm" role="alert">{error}</p>}
+      </StepCard>
+    </div>
   );
 
   const renderStep2 = () => (
@@ -244,7 +249,17 @@ A comma-separated list of 5-7 relevant keywords for this blog post.`;
       {/* Product Input */}
       <StepCard>
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">AI Content Engine</h1>
+          <button 
+            onClick={() => { setStep(1); setError(null); }}
+            className="text-sm font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-500 dark:hover:text-blue-400 transition-colors mb-4 flex items-center gap-1.5 group"
+            aria-label="Go back to change business context"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 transition-transform group-hover:-translate-x-1">
+              <path fillRule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clipRule="evenodd" />
+            </svg>
+            <span>Back</span>
+          </button>
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">2. Generate Content</h1>
           <p className="text-slate-500 dark:text-zinc-400 mt-2">
             Enter a product to generate personalized blog topics for your business.
           </p>
@@ -338,9 +353,10 @@ A comma-separated list of 5-7 relevant keywords for this blog post.`;
             <h2 className="text-lg font-semibold text-slate-700 dark:text-zinc-300 mb-3 px-2">Your Generated Blog Post</h2>
             <StepCard className="min-h-[200px] relative">
                 {isGeneratingBlog ? (
-                    <div className="text-center py-16">
+                    <div className="text-center py-12">
                         <LoadingSpinner className="h-10 w-10 mx-auto"/>
-                        <p className="mt-4 text-slate-500 dark:text-zinc-400">Generating your personalized blog post...</p>
+                        <p className="mt-4 font-semibold text-slate-600 dark:text-zinc-300">Crafting your article...</p>
+                        <p className="mt-2 text-sm text-slate-500 dark:text-zinc-400">This can take up to a minute. Please wait.</p>
                     </div>
                 ) : blogContent && (
                   <>
@@ -381,15 +397,11 @@ A comma-separated list of 5-7 relevant keywords for this blog post.`;
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-zinc-900 font-sans flex flex-col">
       <Header />
-      {step === 0 ? (
-        <Hero onStart={() => setStep(1)} />
-      ) : (
-        <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 pb-12 sm:pb-16">
-          <div className="max-w-3xl mx-auto space-y-10">
-            {step === 1 ? renderStep1() : renderStep2()}
-          </div>
-        </main>
-      )}
+      <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 pb-12 sm:pb-16">
+        <div className={`max-w-3xl mx-auto ${step > 1 ? 'space-y-10' : ''}`}>
+          {step === 1 ? renderStep1() : renderStep2()}
+        </div>
+      </main>
       <Footer />
       <style>{`
         @keyframes fade-in {

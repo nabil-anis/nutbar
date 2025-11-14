@@ -1,20 +1,39 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# AI SEO Blog Generator
 
-# Run and deploy your AI Studio app
+An AI-powered tool to generate buyer-intent topics and SEO-optimized blog posts, tailored to any product and business. This application leverages the power of Google's Gemini API to create high-quality, relevant content instantly.
 
-This contains everything you need to run your app locally.
+## ✨ Features
 
-View your app in AI Studio: https://ai.studio/apps/drive/1G_lXhs2xbnsowIbkEJKJ6MbYtXGpXdcJ
+- **Personalized Content:** Provide your business description or website URL to get blog posts that are tailored to your brand's voice and offerings.
+- **Buyer-Intent Topic Generation:** Enter a product name and receive a categorized list of blog topics designed to attract customers at different stages of the buying journey (General, Comparison, How-To, etc.).
+- **Full Article Creation:** Select a topic and the AI will write a comprehensive, 800+ word blog post, structured for readability and SEO.
+- **SEO Toolkit Included:** Each generated article comes with a ready-to-use meta description and a list of suggested keywords.
+- **Clean, Modern UI:** A minimalist, Apple-inspired interface with both light and dark modes for a comfortable user experience.
+- **Markdown Ready:** Easily copy the full article in Markdown format for quick pasting into your CMS (like WordPress, Ghost, or Webflow).
 
-## Run Locally
+## 🚀 Tech Stack
 
-**Prerequisites:**  Node.js
+- **Frontend:** React, TypeScript
+- **Styling:** Tailwind CSS
+- **AI Model:** Google Gemini API (`@google/genai`)
+- **Markdown Parsing:** Marked.js
 
+## ⚙️ How to Use
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1.  **Start:** Click the "Generate Content Now" button on the homepage.
+2.  **Provide Context:** Enter a description of your business or a URL to your website. This helps the AI understand your brand.
+3.  **Enter Product:** Input the name of the product you want to write about.
+4.  **Generate Topics:** The AI will generate a list of categorized blog post ideas.
+5.  **Select a Topic:** Browse the categories and click on a topic that interests you.
+6.  **Generate Article:** The application will generate a full blog post based on your selection.
+7.  **Copy & Publish:** Use the "Copy Markdown" button to copy the content and paste it into your blog or website.
+
+## 🔑 Environment Variables
+
+To run this project, you will need a Google Gemini API key. This key should be available as an environment variable named `API_KEY`.
+
+---
+
+<p align="center">
+  <small>Built by nosh.</small>
+</p>
