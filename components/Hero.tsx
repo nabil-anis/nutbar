@@ -1,53 +1,30 @@
 
 import React from 'react';
 
-const Hero: React.FC = () => {
-  return (
-    <section id="home" className="relative h-screen flex items-center justify-center text-center bg-gray-900 overflow-hidden">
-       <div className="absolute inset-0 bg-grid-gray-700/[0.2] [mask-image:linear-gradient(to_bottom,white_10%,transparent_100%)]"></div>
-       <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-900/80 to-gray-900"></div>
+interface HeroProps {
+  onStart: () => void;
+}
 
-      <div className="relative z-10 p-4">
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-4">
-          <span className="block text-gray-300">Hi, I'm</span>
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-500 animate-gradient-x">
-            Alex Doe
-          </span>
-        </h1>
-        <p className="text-lg md:text-2xl text-gray-400 max-w-3xl mx-auto mb-8">
-          A Senior Frontend Engineer specializing in building exceptional, high-quality websites and applications with React and the Gemini API.
-        </p>
-        <div className="flex justify-center space-x-4">
-          <a
-            href="#projects"
-            className="bg-blue-600 text-white font-semibold py-3 px-8 rounded-full hover:bg-blue-700 transition duration-300 transform hover:scale-105 shadow-lg"
-          >
-            View My Work
-          </a>
-          <a
-            href="#contact"
-            className="bg-gray-700 text-white font-semibold py-3 px-8 rounded-full hover:bg-gray-600 transition duration-300 transform hover:scale-105 shadow-lg"
-          >
-            Get In Touch
-          </a>
+const Hero: React.FC<HeroProps> = ({ onStart }) => {
+  return (
+    <main className="flex-grow flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Instantly Generate <span className="text-red-600">SEO-Optimized</span> Blog Posts
+          </h1>
+          <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-zinc-400 max-w-2xl mx-auto">
+            Leverage AI to create buyer-intent topics and high-quality articles for any product, tailored to your business.
+          </p>
+          <div className="mt-10">
+            <button
+              onClick={onStart}
+              className="bg-red-600 text-white font-semibold py-3 px-8 rounded-lg hover:bg-red-700 transition-all duration-300 flex items-center justify-center mx-auto shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              Generate Content Now &rarr;
+            </button>
+          </div>
         </div>
-      </div>
-      <style>{`
-        .bg-grid-gray-700\\/\\[0\\.2\\] {
-            background-image: linear-gradient(to right, rgba(55, 65, 81, 0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(55, 65, 81, 0.2) 1px, transparent 1px);
-            background-size: 3rem 3rem;
-        }
-        @keyframes gradient-x {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animate-gradient-x {
-          background-size: 200% 200%;
-          animation: gradient-x 5s ease infinite;
-        }
-      `}</style>
-    </section>
+    </main>
   );
 };
 

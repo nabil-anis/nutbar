@@ -1,26 +1,113 @@
-
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Alex Doe - Senior Frontend Engineer</title>
+    <title>AI SEO Blog Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Set theme on page load to prevent flashing
+      if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
     <style>
-      /* Custom scrollbar for a more modern look */
+      /* Custom scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: #1f2937; /* bg-gray-800 */
+        background: #e5e7eb; /* gray-200 */
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: #27272a; /* zinc-800 */
       }
       ::-webkit-scrollbar-thumb {
-        background: #3b82f6; /* bg-blue-500 */
+        background: #9ca3af; /* gray-400 */
         border-radius: 4px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #2563eb; /* bg-blue-600 */
+        background: #6b7280; /* gray-500 */
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #52525b; /* zinc-600 */
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background: #71717a; /* zinc-500 */
+      }
+
+      /* Prose styling for markdown output */
+      /* Light theme */
+      .prose {
+        color: #374151; /* gray-700 */
+      }
+      .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6 {
+        color: #111827; /* gray-900 */
+      }
+      .prose a {
+        color: #dc2626; /* red-600 */
+        text-decoration: none;
+        font-weight: 500;
+      }
+       .prose a:hover {
+        text-decoration: underline;
+      }
+      .prose strong {
+        color: #111827; /* gray-900 */
+      }
+      .prose blockquote {
+        border-left-color: #d1d5db; /* gray-300 */
+        color: #6b7280; /* gray-500 */
+        font-style: italic;
+      }
+      .prose code {
+        color: #111827; /* gray-900 */
+        background-color: #f3f4f6; /* gray-100 */
+        padding: 0.2em 0.4em;
+        margin: 0;
+        font-size: 85%;
+        border-radius: 6px;
+      }
+      .prose pre {
+         background-color: #f3f4f6; /* gray-100 */
+         padding: 1.25rem;
+         border-radius: 0.75rem;
+         border: 1px solid #e5e7eb; /* gray-200 */
+      }
+      .prose ul > li::marker {
+        color: #9ca3af; /* gray-400 */
+      }
+      
+      /* Dark theme */
+      .dark .prose {
+        color: #d1d5db; /* gray-300 */
+      }
+      .dark .prose h1, .dark .prose h2, .dark .prose h3, .dark .prose h4, .dark .prose h5, .dark .prose h6 {
+          color: #f9fafb; /* gray-50 */
+      }
+      .dark .prose a {
+          color: #f87171; /* red-400 */
+      }
+      .dark .prose strong {
+          color: #f9fafb; /* gray-50 */
+      }
+      .dark .prose blockquote {
+          border-left-color: #4b5563; /* gray-600 */
+          color: #9ca3af; /* gray-400 */
+      }
+      .dark .prose code {
+          color: #f9fafb; /* gray-50 */
+          background-color: #1f2937; /* gray-800 */
+      }
+      .dark .prose pre {
+          background-color: #111827; /* gray-900 */
+          border-color: #374151; /* gray-700 */
+      }
+      .dark .prose ul > li::marker {
+          color: #6b7280; /* gray-500 */
       }
     </style>
   <script type="importmap">
@@ -28,12 +115,14 @@
   "imports": {
     "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "marked": "https://cdn.jsdelivr.net/npm/marked@^13.0.0/lib/marked.esm.js",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.29.1"
   }
 }
 </script>
 </head>
-  <body class="bg-gray-900 text-gray-100">
+  <body class="bg-gray-50 dark:bg-zinc-950 text-slate-800 dark:text-zinc-200 antialiased">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

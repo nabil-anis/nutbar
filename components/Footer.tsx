@@ -1,12 +1,11 @@
-
 import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-900 border-t border-gray-800">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-gray-500">
-        <p>&copy; {new Date().getFullYear()} Alex Doe. All Rights Reserved.</p>
-        <p className="text-sm mt-1">Built with React, TypeScript, and Tailwind CSS.</p>
+    <footer className="bg-transparent mt-16 relative">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-slate-500 dark:text-zinc-500 text-sm">
+        <p>&copy; {new Date().getFullYear()} AI Content Engine. Powered by Google Gemini.</p>
+        <span className="absolute right-4 bottom-2 text-gray-400 dark:text-zinc-600 text-xs italic">By nosh.</span>
       </div>
     </footer>
   );
