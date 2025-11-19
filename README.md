@@ -1,3 +1,4 @@
+
 # AI SEO Blog Generator
 
 An AI-powered tool to generate buyer-intent topics and SEO-optimized blog posts, tailored to any product and business. This application leverages the power of Google's Gemini API to create high-quality, relevant content instantly.
@@ -30,7 +31,7 @@ An AI-powered tool to generate buyer-intent topics and SEO-optimized blog posts,
 
 ## 🔑 Environment Variables
 
-To run this project, you will need a Google Gemini API key. This key should be available as an environment variable named `GEMINI_API_KEY`.
+To run this project, you will need a Google Gemini API key. This key should be available as an environment variable named `API_KEY`.
 
 ---
 

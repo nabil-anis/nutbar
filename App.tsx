@@ -7,7 +7,8 @@ import Footer from './components/Footer';
 import LoadingSpinner from './components/LoadingSpinner';
 import { Topics } from './types';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Use the standard process.env.API_KEY as required by the SDK guidelines
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const categoryDisplayNames: { [key: string]: string } = {
   general: 'General',
@@ -21,7 +22,7 @@ const categoryDisplayNames: { [key: string]: string } = {
 const getErrorMessage = (error: unknown): string => {
   if (error instanceof Error) {
     if (error.message.includes('API key')) {
-      return 'Authentication error. Please ensure your API key is correctly configured in your deployment environment.';
+      return 'Authentication error. Please ensure your API_KEY is correctly configured in your deployment environment.';
     }
     // Try to parse for a detailed API error message
     try {
@@ -43,7 +44,7 @@ const getErrorMessage = (error: unknown): string => {
 const generateWithRetry = async (
   generationRequest: () => Promise<any>,
   onRetry: (attempt: number, delay: number) => void,
-  maxRetries: number = 3
+  maxRetries: number = 5 // Increased retries for better stability
 ) => {
   let lastError: Error | null = null;
   for (let attempt = 0; attempt < maxRetries; attempt++) {
@@ -51,10 +52,12 @@ const generateWithRetry = async (
       return await generationRequest();
     } catch (e: any) {
       lastError = e;
+      // Check for 503 (Service Unavailable) or "overloaded" messages
       const isOverloaded = e.message && (e.message.includes('503') || e.message.toLowerCase().includes('overloaded'));
       
       if (isOverloaded && attempt < maxRetries - 1) {
-        const delay = Math.pow(2, attempt) * 1000; // 1s, 2s, 4s
+        // Exponential backoff with jitter to prevent thundering herd
+        const delay = (Math.pow(2, attempt) * 1000) + (Math.random() * 1000);
         onRetry(attempt + 1, delay);
         await new Promise(resolve => setTimeout(resolve, delay));
         continue;
@@ -134,7 +137,7 @@ const App: React.FC = () => {
 
     try {
       const response = await generateWithRetry(generationRequest, (attempt, delay) => {
-        setRetryMessage(`The model is busy. Retrying in ${delay / 1000}s... (Attempt ${attempt})`);
+        setRetryMessage(`The model is busy. Retrying in ${(delay / 1000).toFixed(1)}s... (Attempt ${attempt})`);
       });
       
       if (!response.text) {
@@ -218,7 +221,7 @@ A comma-separated list of 5-7 relevant keywords for this blog post.`;
 
     try {
       const response = await generateWithRetry(generationRequest, (attempt, delay) => {
-        setRetryMessage(`The model is busy crafting your article. Retrying in ${delay / 1000}s... (Attempt ${attempt})`);
+        setRetryMessage(`The model is busy crafting your article. Retrying in ${(delay / 1000).toFixed(1)}s... (Attempt ${attempt})`);
       });
       
       const markdownContent = response.text;
